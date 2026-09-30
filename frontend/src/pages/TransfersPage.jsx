@@ -93,21 +93,38 @@ export default function TransfersPage() {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      await API.put(`/transfers/${id}/status`, { status });
-    } catch (e) {
-      // Local state fallback
-    }
-
-    setTransfers(transfers.map(t => {
-      if (t.id === id) {
-        return {
-          ...t,
-          status: status === 'APPROVED' ? 'COMPLETED' : status,
-          approvedByUsername: user?.username || 'commander'
-        };
+      const res = await API.put(`/transfers/${id}/status`, { status });
+      if (res.data) {
+        setTransfers(prev => prev.map(t => (t.id === id ? res.data : t)));
+      } else {
+        setTransfers(prev =>
+          prev.map(t => {
+            if (t.id === id) {
+              return {
+                ...t,
+                status: status === 'APPROVED' ? 'COMPLETED' : status,
+                approvedByUsername: user?.username || 'commander'
+              };
+            }
+            return t;
+          })
+        );
       }
-      return t;
-    }));
+    } catch (e) {
+      console.warn('API update failed, applying local fallback:', e);
+      setTransfers(prev =>
+        prev.map(t => {
+          if (t.id === id) {
+            return {
+              ...t,
+              status: status === 'APPROVED' ? 'COMPLETED' : status,
+              approvedByUsername: user?.username || 'commander'
+            };
+          }
+          return t;
+        })
+      );
+    }
 
     setNotice(`Transfer status updated to ${status}. Asset stock adjusted.`);
     setTimeout(() => setNotice(''), 4000);
@@ -275,13 +292,13 @@ export default function TransfersPage() {
                       <div className="flex items-center justify-center space-x-1">
                         <button
                           onClick={() => handleUpdateStatus(t.id, 'APPROVED')}
-                          className="px-2.5 py-1 rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-700 text-[10px] font-bold"
+                          className="px-2.5 py-1 rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-700 text-[10px] font-bold cursor-pointer transition active:scale-95 shadow"
                         >
                           Approve
                         </button>
                         <button
                           onClick={() => handleUpdateStatus(t.id, 'REJECTED')}
-                          className="px-2.5 py-1 rounded bg-red-950 hover:bg-red-900 text-red-400 border border-red-700 text-[10px] font-bold"
+                          className="px-2.5 py-1 rounded bg-red-950 hover:bg-red-900 text-red-400 border border-red-700 text-[10px] font-bold cursor-pointer transition active:scale-95 shadow"
                         >
                           Reject
                         </button>
