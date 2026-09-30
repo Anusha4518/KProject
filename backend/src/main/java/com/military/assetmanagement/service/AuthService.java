@@ -19,23 +19,31 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.military.assetmanagement.dto.RegisterRequest;
+import com.military.assetmanagement.model.Base;
+import com.military.assetmanagement.model.Role;
+import com.military.assetmanagement.repository.BaseRepository;
+
 @Service
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider tokenProvider;
     private final UserRepository userRepository;
+    private final BaseRepository baseRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuditLogService auditLogService;
 
     public AuthService(AuthenticationManager authenticationManager,
                        JwtTokenProvider tokenProvider,
                        UserRepository userRepository,
+                       BaseRepository baseRepository,
                        PasswordEncoder passwordEncoder,
                        AuditLogService auditLogService) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.userRepository = userRepository;
+        this.baseRepository = baseRepository;
         this.passwordEncoder = passwordEncoder;
         this.auditLogService = auditLogService;
     }
@@ -85,6 +93,52 @@ public class AuthService {
                 baseName,
                 user.getRankTitle()
         );
+    }
+
+    @Transactional
+    public AuthResponse register(RegisterRequest request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists: " + request.getUsername());
+        }
+
+        Role role = Role.LOGISTICS_OFFICER;
+        if (request.getRole() != null) {
+            try {
+                role = Role.valueOf(request.getRole().toUpperCase());
+            } catch (Exception ignored) {}
+        }
+
+        Base base = null;
+        if (request.getBaseId() != null) {
+            base = baseRepository.findById(request.getBaseId()).orElse(null);
+        }
+
+        User newUser = new User();
+        newUser.setUsername(request.getUsername());
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setFullName(request.getFullName());
+        newUser.setRole(role);
+        newUser.setBase(base);
+        newUser.setEmail(request.getEmail());
+        newUser.setRankTitle(request.getRankTitle() != null ? request.getRankTitle() : "Officer");
+
+        User saved = userRepository.save(newUser);
+
+        auditLogService.logAction(
+                saved.getId(),
+                saved.getUsername(),
+                saved.getRole().name(),
+                "USER_REGISTERED",
+                "User",
+                saved.getId(),
+                "New user registered: " + saved.getUsername(),
+                "127.0.0.1"
+        );
+
+        LoginRequest loginReq = new LoginRequest();
+        loginReq.setUsername(request.getUsername());
+        loginReq.setPassword(request.getPassword());
+        return login(loginReq);
     }
 
     @Transactional(readOnly = true)

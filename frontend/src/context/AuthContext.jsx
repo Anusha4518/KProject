@@ -53,9 +53,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('military_jwt_token');
         localStorage.removeItem('military_user_info');
       }
-    } else {
-      // Default auto-login as Admin for instant rich demo experience
-      demoLogin('admin');
     }
     setLoading(false);
   }, []);
@@ -75,6 +72,33 @@ export const AuthProvider = ({ children }) => {
         return demoLogin(username);
       }
       return { success: false, message: err.response?.data?.message || 'Login failed' };
+    }
+  };
+
+  const register = async (registerData) => {
+    try {
+      const res = await API.post('/auth/register', registerData);
+      const { token, ...userData } = res.data;
+      localStorage.setItem('military_jwt_token', token);
+      localStorage.setItem('military_user_info', JSON.stringify(userData));
+      setUser(userData);
+      return { success: true };
+    } catch (err) {
+      // Local fallback for demo mode
+      const mockToken = `mock-jwt-token-registered-${Date.now()}`;
+      const userData = {
+        userId: Date.now(),
+        username: registerData.username,
+        fullName: registerData.fullName || registerData.username,
+        role: registerData.role || 'LOGISTICS_OFFICER',
+        baseId: registerData.baseId || 1,
+        baseName: 'Fort Alpha Central Command',
+        rankTitle: registerData.rankTitle || 'Lieutenant'
+      };
+      localStorage.setItem('military_jwt_token', mockToken);
+      localStorage.setItem('military_user_info', JSON.stringify(userData));
+      setUser(userData);
+      return { success: true };
     }
   };
 
@@ -104,7 +128,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, demoLogin, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, demoLogin, logout }}>
       {children}
     </AuthContext.Provider>
   );

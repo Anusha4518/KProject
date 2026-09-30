@@ -1,18 +1,50 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext, DEMO_USERS } from '../context/AuthContext';
-import { Shield, KeyRound, Lock, User, CheckCircle2 } from 'lucide-react';
+import { Shield, KeyRound, Lock, User, CheckCircle2, UserPlus, LogIn, Building2, BadgeCheck } from 'lucide-react';
 
 export default function LoginPage() {
-  const { login, demoLogin } = useContext(AuthContext);
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('admin123');
+  const { login, register, demoLogin } = useContext(AuthContext);
+  const [isRegister, setIsRegister] = useState(false);
+
+  // Login form state
+  const [loginUsername, setLoginUsername] = useState('admin');
+  const [loginPassword, setLoginPassword] = useState('admin123');
+
+  // Register form state
+  const [regForm, setRegForm] = useState({
+    username: '',
+    password: '',
+    fullName: '',
+    rankTitle: 'Lieutenant (O-2)',
+    role: 'LOGISTICS_OFFICER',
+    baseId: 1,
+    email: ''
+  });
+
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    const result = await login(username, password);
+    setError('');
+    const result = await login(loginUsername, loginPassword);
     if (!result.success) {
       setError(result.message || 'Invalid military credentials');
+    }
+  };
+
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    if (!regForm.username || !regForm.password || !regForm.fullName) {
+      setError('Please fill in all required fields');
+      return;
+    }
+    const result = await register({
+      ...regForm,
+      baseId: parseInt(regForm.baseId)
+    });
+    if (!result.success) {
+      setError(result.message || 'Registration failed');
     }
   };
 
@@ -32,49 +64,181 @@ export default function LoginPage() {
           <p className="text-xs text-slate-400 font-mono">Restricted Access Defense Asset Logistics Platform</p>
         </div>
 
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-2xl space-y-4 font-mono">
-          {error && (
-            <div className="p-3 rounded-lg bg-red-950/80 border border-red-800 text-red-300 text-xs">
-              {error}
-            </div>
-          )}
-
-          <div>
-            <label className="block text-xs text-slate-400 mb-1">Username / ID</label>
-            <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-              <User className="w-4 h-4 text-slate-500" />
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs text-slate-400 mb-1">Password</label>
-            <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-              <Lock className="w-4 h-4 text-slate-500" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
-                required
-              />
-            </div>
-          </div>
-
+        {/* Auth Mode Toggle Tabs */}
+        <div className="flex bg-slate-900/90 border border-slate-800 rounded-xl p-1 font-mono text-xs shadow-lg">
           <button
-            type="submit"
-            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-950/50 transition"
+            type="button"
+            onClick={() => { setIsRegister(false); setError(''); }}
+            className={`flex-1 py-2 rounded-lg font-bold transition flex items-center justify-center space-x-2 ${
+              !isRegister
+                ? 'bg-blue-600 text-white shadow'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
           >
-            AUTHENTICATE &amp; SIGN IN
+            <LogIn className="w-3.5 h-3.5" />
+            <span>AUTHENTICATE / SIGN IN</span>
           </button>
-        </form>
+          <button
+            type="button"
+            onClick={() => { setIsRegister(true); setError(''); }}
+            className={`flex-1 py-2 rounded-lg font-bold transition flex items-center justify-center space-x-2 ${
+              isRegister
+                ? 'bg-blue-600 text-white shadow'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <UserPlus className="w-3.5 h-3.5" />
+            <span>REGISTER PERSONNEL</span>
+          </button>
+        </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="p-3 rounded-lg bg-red-950/80 border border-red-800 text-red-300 text-xs font-mono">
+            {error}
+          </div>
+        )}
+
+        {/* Form Container */}
+        {!isRegister ? (
+          /* Sign In Form */
+          <form onSubmit={handleLoginSubmit} className="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-2xl space-y-4 font-mono">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Username / Military ID</label>
+              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
+                <User className="w-4 h-4 text-slate-500" />
+                <input
+                  type="text"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
+                  placeholder="Enter username (e.g. admin)"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Passcode / Key</label>
+              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
+                <Lock className="w-4 h-4 text-slate-500" />
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
+                  placeholder="Enter password"
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-950/50 transition cursor-pointer"
+            >
+              AUTHENTICATE &amp; SIGN IN
+            </button>
+          </form>
+        ) : (
+          /* Registration Form */
+          <form onSubmit={handleRegisterSubmit} className="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-2xl space-y-4 font-mono">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Username / Security Handle *</label>
+              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
+                <User className="w-4 h-4 text-slate-500" />
+                <input
+                  type="text"
+                  value={regForm.username}
+                  onChange={(e) => setRegForm({ ...regForm, username: e.target.value })}
+                  className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
+                  placeholder="e.g. officer_delta"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Full Name &amp; Designation *</label>
+              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
+                <BadgeCheck className="w-4 h-4 text-slate-500" />
+                <input
+                  type="text"
+                  value={regForm.fullName}
+                  onChange={(e) => setRegForm({ ...regForm, fullName: e.target.value })}
+                  className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
+                  placeholder="e.g. Lt. Arthur Pendelton"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Rank Title</label>
+                <input
+                  type="text"
+                  value={regForm.rankTitle}
+                  onChange={(e) => setRegForm({ ...regForm, rankTitle: e.target.value })}
+                  className="w-full bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg text-xs text-slate-200"
+                  placeholder="e.g. Captain (O-3)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1">Assigned Role</label>
+                <select
+                  value={regForm.role}
+                  onChange={(e) => setRegForm({ ...regForm, role: e.target.value })}
+                  className="w-full bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg text-xs text-slate-200"
+                >
+                  <option value="LOGISTICS_OFFICER">Logistics Officer</option>
+                  <option value="BASE_COMMANDER">Base Commander</option>
+                  <option value="ADMIN">System Admin</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Assigned Military Base</label>
+              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
+                <Building2 className="w-4 h-4 text-slate-500" />
+                <select
+                  value={regForm.baseId}
+                  onChange={(e) => setRegForm({ ...regForm, baseId: e.target.value })}
+                  className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
+                >
+                  <option value={1} className="bg-slate-900">Fort Alpha Central Command</option>
+                  <option value={2} className="bg-slate-900">Forward Operating Base Bravo</option>
+                  <option value={3} className="bg-slate-900">Naval Logistics Outpost Charlie</option>
+                  <option value={4} className="bg-slate-900">Air Defense Garrison Delta</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Password *</label>
+              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
+                <Lock className="w-4 h-4 text-slate-500" />
+                <input
+                  type="password"
+                  value={regForm.password}
+                  onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
+                  className="w-full bg-transparent text-xs text-slate-200 focus:outline-none"
+                  placeholder="Set password"
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-950/50 transition cursor-pointer"
+            >
+              REGISTER PERSONNEL &amp; SIGN IN
+            </button>
+          </form>
+        )}
 
         {/* Quick One-Click Demo Logins */}
         <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-3 font-mono">
@@ -88,7 +252,7 @@ export default function LoginPage() {
               <button
                 key={demo.username}
                 onClick={() => demoLogin(demo.username)}
-                className="w-full p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left transition flex items-center justify-between group"
+                className="w-full p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left transition flex items-center justify-between group cursor-pointer"
               >
                 <div>
                   <div className="text-xs font-bold text-slate-200 group-hover:text-blue-400 flex items-center gap-1.5">

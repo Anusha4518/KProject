@@ -30,6 +30,12 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody com.military.assetmanagement.dto.RegisterRequest registerRequest) {
+        AuthResponse response = authService.register(registerRequest);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserDTO> getCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         if (userPrincipal == null) {
