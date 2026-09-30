@@ -44,16 +44,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('military_jwt_token');
-    const storedUser = localStorage.getItem('military_user_info');
-    if (storedToken && storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        localStorage.removeItem('military_jwt_token');
-        localStorage.removeItem('military_user_info');
-      }
-    }
+    // Ensure app starts unauthenticated so Login / Register screen is presented first
+    localStorage.removeItem('military_jwt_token');
+    localStorage.removeItem('military_user_info');
+    setUser(null);
     setLoading(false);
   }, []);
 
