@@ -1,6 +1,6 @@
 package com.military.assetmanagement.service;
 
-import com.military.assetmanagement.audit.AuditLogService;
+import com.military.assetmanagement.service.AuditLogService;
 import com.military.assetmanagement.dto.AuthResponse;
 import com.military.assetmanagement.dto.LoginRequest;
 import com.military.assetmanagement.dto.UserDTO;
