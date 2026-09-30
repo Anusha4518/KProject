@@ -1,23 +1,23 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { LayoutDashboard, ShoppingCart, ArrowLeftRight, UserCheck, History, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, ArrowLeftRight, UserCheck, History } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const { user } = useContext(AuthContext);
 
   const navItems = [
-    { id: 'dashboard', label: 'Command Dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER'] },
+    { id: 'dashboard', label: 'Dashboard Overview', icon: LayoutDashboard, roles: ['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER'] },
     { id: 'purchases', label: 'Asset Purchases', icon: ShoppingCart, roles: ['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER'] },
-    { id: 'transfers', label: 'Asset Transfers', icon: ArrowLeftRight, roles: ['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER'] },
-    { id: 'assignments', label: 'Assignments & Usage', icon: UserCheck, roles: ['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER'] },
-    { id: 'audit-logs', label: 'System Audit Logs', icon: History, roles: ['ADMIN', 'BASE_COMMANDER'] },
+    { id: 'transfers', label: 'Inter-Base Transfers', icon: ArrowLeftRight, roles: ['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER'] },
+    { id: 'assignments', label: 'Personnel Assignments', icon: UserCheck, roles: ['ADMIN', 'BASE_COMMANDER', 'LOGISTICS_OFFICER'] },
+    { id: 'audit-logs', label: 'Audit Log Trail', icon: History, roles: ['ADMIN', 'BASE_COMMANDER'] },
   ];
 
   return (
     <aside className="w-64 bg-slate-900/80 border-r border-slate-800 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)]">
       <div className="space-y-6">
         <div className="px-3 py-2">
-          <p className="text-[10px] uppercase font-mono tracking-widest text-slate-400">Tactical Modules</p>
+          <p className="text-[11px] uppercase tracking-wider text-slate-400 font-medium">Navigation Modules</p>
         </div>
 
         <nav className="space-y-1">
@@ -31,9 +31,9 @@ export default function Sidebar({ activeTab, setActiveTab }) {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all ${
+                className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-blue-600/20 text-blue-300 border border-blue-500/40 shadow-sm shadow-blue-900/30'
+                    ? 'bg-blue-600/20 text-blue-300 border border-blue-500/40 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent'
                 }`}
               >
@@ -45,14 +45,14 @@ export default function Sidebar({ activeTab, setActiveTab }) {
         </nav>
       </div>
 
-      {/* Footer System Status Card */}
-      <div className="bg-slate-950/70 p-3 rounded-xl border border-slate-800 space-y-2">
-        <div className="flex items-center space-x-2 text-xs text-emerald-400 font-mono">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>SYSTEM ONLINE</span>
+      {/* Footer Status Card */}
+      <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+        <div className="flex items-center space-x-2 text-xs text-emerald-400 font-medium">
+          <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Database &amp; Server Connected</span>
         </div>
         <div className="text-[11px] text-slate-400">
-          Enforcing Scope: <span className="font-mono text-slate-300">{user?.role}</span>
+          User Role: <span className="font-semibold text-slate-300">{user?.role}</span>
         </div>
       </div>
     </aside>
