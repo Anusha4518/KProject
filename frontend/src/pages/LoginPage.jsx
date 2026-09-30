@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext, DEMO_USERS } from '../context/AuthContext';
-import { Shield, KeyRound, Lock, User, CheckCircle2, UserPlus, LogIn, Building2, BadgeCheck } from 'lucide-react';
+import { Shield, KeyRound, CheckCircle2 } from 'lucide-react';
 
 export default function LoginPage() {
   const { login, register, demoLogin } = useContext(AuthContext);
@@ -8,7 +8,6 @@ export default function LoginPage() {
 
   // Login form state
   const [loginUsername, setLoginUsername] = useState('admin');
-  
   const [loginPassword, setLoginPassword] = useState('admin123');
 
   // Register form state
@@ -16,10 +15,9 @@ export default function LoginPage() {
     username: '',
     password: '',
     fullName: '',
-    rankTitle: 'Lieutenant (O-2)',
+    rankTitle: 'Lieutenant',
     role: 'LOGISTICS_OFFICER',
-    baseId: 1,
-    email: ''
+    baseId: 1
   });
 
   const [error, setError] = useState('');
@@ -50,198 +48,170 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
-        {/* Logo & Header */}
+        
+        {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex p-3 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400">
-            <Shield className="w-8 h-8" />
+          <div className="inline-flex p-3 rounded-xl bg-blue-600 text-white">
+            <Shield className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-100 tracking-tight">Military Asset Management System</h1>
-          <p className="text-xs text-slate-400">Inventory Control & Inter-Base Asset Logistics Portal</p>
+          <h1 className="text-xl font-bold">Military Asset Management</h1>
+          <p className="text-xs text-slate-400">Sign in to manage inventory and asset transfers</p>
         </div>
 
-        {/* Tab Toggle */}
-        <div className="flex bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
+        {/* Tab Switcher */}
+        <div className="flex bg-slate-800 rounded-lg p-1 text-xs font-medium">
           <button
             type="button"
             onClick={() => { setIsRegister(false); setError(''); }}
-            className={`flex-1 py-2 rounded-lg font-semibold transition flex items-center justify-center space-x-2 ${
-              !isRegister
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
+            className={`flex-1 py-2 rounded-md transition ${!isRegister ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
           >
-            <LogIn className="w-3.5 h-3.5" />
-            <span>Sign In</span>
+            Sign In
           </button>
           <button
             type="button"
             onClick={() => { setIsRegister(true); setError(''); }}
-            className={`flex-1 py-2 rounded-lg font-semibold transition flex items-center justify-center space-x-2 ${
-              isRegister
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
+            className={`flex-1 py-2 rounded-md transition ${isRegister ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
           >
-            <UserPlus className="w-3.5 h-3.5" />
-            <span>Register Account</span>
+            Register
           </button>
         </div>
 
-        {/* Error message */}
+        {/* Error Notification */}
         {error && (
-          <div className="p-3 rounded-lg bg-red-950/80 border border-red-800 text-red-300 text-xs">
+          <div className="p-3 rounded-lg bg-red-900/50 border border-red-700 text-red-200 text-xs">
             {error}
           </div>
         )}
 
         {/* Forms */}
         {!isRegister ? (
-          /* Sign In Form */
-          <form onSubmit={handleLoginSubmit} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4 text-xs">
+          /* Sign In */
+          <form onSubmit={handleLoginSubmit} className="bg-slate-800/80 border border-slate-700 p-6 rounded-xl space-y-4 text-xs">
             <div>
-              <label className="block text-slate-400 mb-1 font-medium">Username</label>
-              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-                <User className="w-4 h-4 text-slate-500" />
-                <input
-                  type="text"
-                  value={loginUsername}
-                  onChange={(e) => setLoginUsername(e.target.value)}
-                  className="w-full bg-transparent text-slate-200 focus:outline-none"
-                  placeholder="e.g. admin or officer_alpha"
-                  required
-                />
-              </div>
+              <label className="block text-slate-300 mb-1 font-medium">Username</label>
+              <input
+                type="text"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
+                placeholder="Username"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-slate-400 mb-1 font-medium">Password</label>
-              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-                <Lock className="w-4 h-4 text-slate-500" />
-                <input
-                  type="password"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  className="w-full bg-transparent text-slate-200 focus:outline-none"
-                  placeholder="Enter password"
-                  required
-                />
-              </div>
+              <label className="block text-slate-300 mb-1 font-medium">Password</label>
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
+                placeholder="Password"
+                required
+              />
             </div>
 
             <button
               type="submit"
-              className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md transition cursor-pointer"
+              className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition cursor-pointer"
             >
-              Sign In to System
+              Sign In
             </button>
           </form>
         ) : (
-          /* Registration Form */
-          <form onSubmit={handleRegisterSubmit} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4 text-xs">
+          /* Register */
+          <form onSubmit={handleRegisterSubmit} className="bg-slate-800/80 border border-slate-700 p-6 rounded-xl space-y-4 text-xs">
             <div>
-              <label className="block text-slate-400 mb-1 font-medium">Username *</label>
-              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-                <User className="w-4 h-4 text-slate-500" />
-                <input
-                  type="text"
-                  value={regForm.username}
-                  onChange={(e) => setRegForm({ ...regForm, username: e.target.value })}
-                  className="w-full bg-transparent text-slate-200 focus:outline-none"
-                  placeholder="e.g. officer_delta"
-                  required
-                />
-              </div>
+              <label className="block text-slate-300 mb-1 font-medium">Username *</label>
+              <input
+                type="text"
+                value={regForm.username}
+                onChange={(e) => setRegForm({ ...regForm, username: e.target.value })}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
+                placeholder="Choose username"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-slate-400 mb-1 font-medium">Full Name *</label>
-              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-                <BadgeCheck className="w-4 h-4 text-slate-500" />
-                <input
-                  type="text"
-                  value={regForm.fullName}
-                  onChange={(e) => setRegForm({ ...regForm, fullName: e.target.value })}
-                  className="w-full bg-transparent text-slate-200 focus:outline-none"
-                  placeholder="e.g. Lt. Arthur Pendelton"
-                  required
-                />
-              </div>
+              <label className="block text-slate-300 mb-1 font-medium">Full Name *</label>
+              <input
+                type="text"
+                value={regForm.fullName}
+                onChange={(e) => setRegForm({ ...regForm, fullName: e.target.value })}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
+                placeholder="Full name"
+                required
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-400 mb-1 font-medium">Rank / Designation</label>
+                <label className="block text-slate-300 mb-1 font-medium">Rank / Title</label>
                 <input
                   type="text"
                   value={regForm.rankTitle}
                   onChange={(e) => setRegForm({ ...regForm, rankTitle: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg text-slate-200"
-                  placeholder="e.g. Captain (O-3)"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1 font-medium">System Role</label>
+                <label className="block text-slate-300 mb-1 font-medium">Role</label>
                 <select
                   value={regForm.role}
                   onChange={(e) => setRegForm({ ...regForm, role: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg text-slate-200"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
                 >
                   <option value="LOGISTICS_OFFICER">Logistics Officer</option>
                   <option value="BASE_COMMANDER">Base Commander</option>
-                  <option value="ADMIN">System Admin</option>
+                  <option value="ADMIN">Admin</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-slate-400 mb-1 font-medium font-sans">Assigned Base</label>
-              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-                <Building2 className="w-4 h-4 text-slate-500" />
-                <select
-                  value={regForm.baseId}
-                  onChange={(e) => setRegForm({ ...regForm, baseId: e.target.value })}
-                  className="w-full bg-transparent text-slate-200 focus:outline-none"
-                >
-                  <option value={1} className="bg-slate-900">Fort Alpha Central Command</option>
-                  <option value={2} className="bg-slate-900">Forward Operating Base Bravo</option>
-                  <option value={3} className="bg-slate-900">Naval Logistics Outpost Charlie</option>
-                  <option value={4} className="bg-slate-900">Air Defense Garrison Delta</option>
-                </select>
-              </div>
+              <label className="block text-slate-300 mb-1 font-medium">Assigned Base</label>
+              <select
+                value={regForm.baseId}
+                onChange={(e) => setRegForm({ ...regForm, baseId: e.target.value })}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
+              >
+                <option value={1}>Fort Alpha Central Command</option>
+                <option value={2}>Forward Operating Base Bravo</option>
+                <option value={3}>Naval Logistics Outpost Charlie</option>
+                <option value={4}>Air Defense Garrison Delta</option>
+              </select>
             </div>
 
             <div>
-              <label className="block text-slate-400 mb-1 font-medium">Password *</label>
-              <div className="flex items-center space-x-2 bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
-                <Lock className="w-4 h-4 text-slate-500" />
-                <input
-                  type="password"
-                  value={regForm.password}
-                  onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
-                  className="w-full bg-transparent text-slate-200 focus:outline-none"
-                  placeholder="Set password"
-                  required
-                />
-              </div>
+              <label className="block text-slate-300 mb-1 font-medium">Password *</label>
+              <input
+                type="password"
+                value={regForm.password}
+                onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-100 focus:outline-none focus:border-blue-500"
+                placeholder="Set password"
+                required
+              />
             </div>
 
             <button
               type="submit"
-              className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md transition cursor-pointer"
+              className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition cursor-pointer"
             >
-              Register &amp; Sign In
+              Create Account
             </button>
           </form>
         )}
 
         {/* Demo Accounts Panel */}
-        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-3 text-xs">
+        <div className="bg-slate-800/50 border border-slate-700/60 p-4 rounded-xl space-y-3 text-xs">
           <div className="flex items-center space-x-2 font-medium text-slate-300">
             <KeyRound className="w-4 h-4 text-amber-400" />
-            <span>Quick Demo Accounts (Click to Test)</span>
+            <span>Demo Accounts (Click to Test)</span>
           </div>
 
           <div className="space-y-2">
@@ -249,20 +219,21 @@ export default function LoginPage() {
               <button
                 key={demo.username}
                 onClick={() => demoLogin(demo.username)}
-                className="w-full p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-left transition flex items-center justify-between group cursor-pointer"
+                className="w-full p-2.5 rounded-lg bg-slate-900 hover:bg-slate-700/60 border border-slate-700 text-left transition flex items-center justify-between group cursor-pointer"
               >
                 <div>
-                  <div className="text-xs font-bold text-slate-200 group-hover:text-blue-400 flex items-center gap-1.5">
+                  <div className="text-xs font-semibold text-slate-200 group-hover:text-blue-400 flex items-center gap-1.5">
                     <span>{demo.roleName}</span>
-                    <span className="text-slate-500 font-normal">({demo.username})</span>
+                    <span className="text-slate-400 font-normal">({demo.username})</span>
                   </div>
                   <div className="text-[11px] text-slate-400">{demo.fullName} &bull; {demo.baseName}</div>
                 </div>
-                <CheckCircle2 className="w-4 h-4 text-slate-600 group-hover:text-blue-400" />
+                <CheckCircle2 className="w-4 h-4 text-slate-500 group-hover:text-blue-400" />
               </button>
             ))}
           </div>
         </div>
+
       </div>
     </div>
   );
