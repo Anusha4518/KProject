@@ -1,5 +1,4 @@
 -- Military Asset Management System - Initial Seed Data
-USE military_asset_db;
 
 -- 1. Bases
 INSERT INTO bases (id, name, code, location, command_region) VALUES
