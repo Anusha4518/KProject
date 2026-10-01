@@ -139,24 +139,24 @@ export default function AssignmentsPage() {
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/90 border border-slate-800 p-5 rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
         <div>
-          <h2 className="text-xl font-extrabold text-slate-100 font-mono tracking-wide flex items-center gap-2">
-            <UserCheck className="w-5 h-5 text-purple-400" /> PERSONNEL ASSIGNMENTS & EXPENDITURES
+          <h2 className="text-xl font-extrabold text-slate-900 font-sans tracking-tight flex items-center gap-2">
+            <UserCheck className="w-5 h-5 text-purple-600" /> Personnel Assignments & Expenditures
           </h2>
-          <p className="text-xs text-slate-400 mt-1">Issue tactical equipment to military personnel or record consumed operational assets.</p>
+          <p className="text-xs text-slate-500 mt-1">Issue tactical equipment to military personnel or record consumed operational assets.</p>
         </div>
         <div className="flex space-x-2">
           <button
             onClick={() => { setFormMode('ASSIGNMENT'); setShowForm(true); }}
-            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-500 text-white px-3.5 py-2 rounded-xl text-xs font-mono font-bold shadow transition"
+            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-3.5 py-2 rounded-xl text-xs font-medium shadow-sm transition"
           >
             <User className="w-4 h-4" />
             <span>Issue Assignment</span>
           </button>
           <button
             onClick={() => { setFormMode('EXPENDITURE'); setShowForm(true); }}
-            className="flex items-center space-x-2 bg-amber-600 hover:bg-amber-500 text-white px-3.5 py-2 rounded-xl text-xs font-mono font-bold shadow transition"
+            className="flex items-center space-x-2 bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-medium shadow-sm transition"
           >
             <Flame className="w-4 h-4" />
             <span>Record Expenditure</span>
@@ -165,192 +165,192 @@ export default function AssignmentsPage() {
       </div>
 
       {message && (
-        <div className="p-4 bg-purple-950/80 border border-purple-700 text-purple-300 rounded-xl text-xs font-mono flex items-center gap-2 shadow">
-          <CheckCircle2 className="w-4 h-4" /> {message}
+        <div className="p-4 bg-purple-50 border border-purple-200 text-purple-800 rounded-xl text-xs flex items-center gap-2 shadow-sm">
+          <CheckCircle2 className="w-4 h-4 text-purple-600" /> {message}
         </div>
       )}
 
       {/* Forms Section */}
       {showForm && formMode === 'ASSIGNMENT' && (
-        <form onSubmit={handleAssignSubmit} className="bg-slate-900 border border-purple-800/80 p-5 rounded-2xl space-y-4 shadow-2xl animate-fadeIn">
-          <h3 className="text-sm font-bold font-mono text-purple-400 uppercase tracking-wider flex items-center gap-2">
+        <form onSubmit={handleAssignSubmit} className="bg-white border border-purple-200 p-5 rounded-2xl space-y-4 shadow-sm animate-fadeIn">
+          <h3 className="text-sm font-bold text-purple-700 uppercase tracking-wider flex items-center gap-2">
             <User className="w-4 h-4" /> Issue Asset Assignment to Personnel
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
             <div>
-              <label className="block text-slate-400 mb-1">Base Facility</label>
+              <label className="block text-slate-700 font-medium mb-1">Base Facility</label>
               <select
                 value={assignForm.baseId}
                 onChange={(e) => setAssignForm({ ...assignForm, baseId: e.target.value })}
                 disabled={user?.role !== 'ADMIN'}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               >
                 {bases.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Equipment Item</label>
+              <label className="block text-slate-700 font-medium mb-1">Equipment Item</label>
               <select
                 value={assignForm.equipmentTypeId}
                 onChange={(e) => setAssignForm({ ...assignForm, equipmentTypeId: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               >
                 {equipmentTypes.map(eq => <option key={eq.id} value={eq.id}>{eq.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Personnel Full Name</label>
+              <label className="block text-slate-700 font-medium mb-1">Personnel Full Name</label>
               <input
                 type="text"
                 placeholder="e.g. Sgt. John Connor"
                 value={assignForm.personnelName}
                 onChange={(e) => setAssignForm({ ...assignForm, personnelName: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
                 required
               />
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Rank / Position</label>
+              <label className="block text-slate-700 font-medium mb-1">Rank / Position</label>
               <input
                 type="text"
                 value={assignForm.personnelRank}
                 onChange={(e) => setAssignForm({ ...assignForm, personnelRank: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               />
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Quantity Assigned</label>
+              <label className="block text-slate-700 font-medium mb-1">Quantity Assigned</label>
               <input
                 type="number"
                 min="1"
                 value={assignForm.quantity}
                 onChange={(e) => setAssignForm({ ...assignForm, quantity: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
                 required
               />
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Assignment Purpose / Unit</label>
+              <label className="block text-slate-700 font-medium mb-1">Assignment Purpose / Unit</label>
               <input
                 type="text"
                 placeholder="e.g. Issued to Recon Squad"
                 value={assignForm.notes}
                 onChange={(e) => setAssignForm({ ...assignForm, notes: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               />
             </div>
           </div>
           <div className="flex justify-end space-x-3 pt-2">
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
-            <button type="submit" className="px-5 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-mono font-bold shadow">Save Assignment</button>
+            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium border border-slate-300">Cancel</button>
+            <button type="submit" className="px-5 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium shadow-sm">Save Assignment</button>
           </div>
         </form>
       )}
 
       {showForm && formMode === 'EXPENDITURE' && (
-        <form onSubmit={handleExpendSubmit} className="bg-slate-900 border border-amber-800/80 p-5 rounded-2xl space-y-4 shadow-2xl animate-fadeIn">
-          <h3 className="text-sm font-bold font-mono text-amber-400 uppercase tracking-wider flex items-center gap-2">
+        <form onSubmit={handleExpendSubmit} className="bg-white border border-amber-200 p-5 rounded-2xl space-y-4 shadow-sm animate-fadeIn">
+          <h3 className="text-sm font-bold text-amber-700 uppercase tracking-wider flex items-center gap-2">
             <Flame className="w-4 h-4" /> Record Consumed / Expended Assets
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
             <div>
-              <label className="block text-slate-400 mb-1">Base Facility</label>
+              <label className="block text-slate-700 font-medium mb-1">Base Facility</label>
               <select
                 value={expendForm.baseId}
                 onChange={(e) => setExpendForm({ ...expendForm, baseId: e.target.value })}
                 disabled={user?.role !== 'ADMIN'}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               >
                 {bases.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Expendable Item (e.g. Ammo)</label>
+              <label className="block text-slate-700 font-medium mb-1">Expendable Item (e.g. Ammo)</label>
               <select
                 value={expendForm.equipmentTypeId}
                 onChange={(e) => setExpendForm({ ...expendForm, equipmentTypeId: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               >
                 {equipmentTypes.map(eq => <option key={eq.id} value={eq.id}>{eq.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Operation / Exercise Name</label>
+              <label className="block text-slate-700 font-medium mb-1">Operation / Exercise Name</label>
               <input
                 type="text"
                 placeholder="e.g. Range Armory Live-fire"
                 value={expendForm.operationName}
                 onChange={(e) => setExpendForm({ ...expendForm, operationName: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
                 required
               />
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Unit Section / Taskforce</label>
+              <label className="block text-slate-700 font-medium mb-1">Unit Section / Taskforce</label>
               <input
                 type="text"
                 value={expendForm.unitSection}
                 onChange={(e) => setExpendForm({ ...expendForm, unitSection: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               />
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Quantity Expended</label>
+              <label className="block text-slate-700 font-medium mb-1">Quantity Expended</label>
               <input
                 type="number"
                 min="1"
                 value={expendForm.quantity}
                 onChange={(e) => setExpendForm({ ...expendForm, quantity: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
                 required
               />
             </div>
             <div>
-              <label className="block text-slate-400 mb-1">Expenditure Details</label>
+              <label className="block text-slate-700 font-medium mb-1">Expenditure Details</label>
               <input
                 type="text"
                 placeholder="Reason / combat logs..."
                 value={expendForm.notes}
                 onChange={(e) => setExpendForm({ ...expendForm, notes: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
               />
             </div>
           </div>
           <div className="flex justify-end space-x-3 pt-2">
-            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono">Cancel</button>
-            <button type="submit" className="px-5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-mono font-bold shadow">Record Expenditure</button>
+            <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium border border-slate-300">Cancel</button>
+            <button type="submit" className="px-5 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium shadow-sm">Record Expenditure</button>
           </div>
         </form>
       )}
 
       {/* Filter Tabs */}
-      <div className="flex space-x-2 border-b border-slate-800 pb-2 text-xs font-mono">
+      <div className="flex space-x-2 border-b border-slate-200 pb-2 text-xs font-medium">
         <button
           onClick={() => setFilterType('ALL')}
-          className={`px-3 py-1.5 rounded-lg border transition ${filterType === 'ALL' ? 'bg-slate-800 text-slate-100 border-slate-600 font-bold' : 'text-slate-400 border-transparent hover:bg-slate-800/50'}`}
+          className={`px-3 py-1.5 rounded-lg border transition ${filterType === 'ALL' ? 'bg-slate-800 text-white border-slate-800 font-semibold' : 'text-slate-600 border-slate-200 hover:bg-slate-100'}`}
         >
           All Records ({assignments.length})
         </button>
         <button
           onClick={() => setFilterType('ASSIGNMENT')}
-          className={`px-3 py-1.5 rounded-lg border transition ${filterType === 'ASSIGNMENT' ? 'bg-purple-950/80 text-purple-300 border-purple-700 font-bold' : 'text-slate-400 border-transparent hover:bg-slate-800/50'}`}
+          className={`px-3 py-1.5 rounded-lg border transition ${filterType === 'ASSIGNMENT' ? 'bg-purple-100 text-purple-800 border-purple-300 font-semibold' : 'text-slate-600 border-slate-200 hover:bg-slate-100'}`}
         >
           Personnel Issued ({assignments.filter(a => a.type === 'ASSIGNMENT').length})
         </button>
         <button
           onClick={() => setFilterType('EXPENDITURE')}
-          className={`px-3 py-1.5 rounded-lg border transition ${filterType === 'EXPENDITURE' ? 'bg-amber-950/80 text-amber-300 border-amber-700 font-bold' : 'text-slate-400 border-transparent hover:bg-slate-800/50'}`}
+          className={`px-3 py-1.5 rounded-lg border transition ${filterType === 'EXPENDITURE' ? 'bg-amber-100 text-amber-800 border-amber-300 font-semibold' : 'text-slate-600 border-slate-200 hover:bg-slate-100'}`}
         >
           Expended Assets ({assignments.filter(a => a.type === 'EXPENDITURE').length})
         </button>
       </div>
 
       {/* Ledger Table */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-mono border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/60">
+              <tr className="border-b border-slate-200 text-slate-600 bg-slate-50 font-semibold">
                 <th className="py-3 px-4">Ref Code</th>
                 <th className="py-3 px-4">Category Type</th>
                 <th className="py-3 px-4">Base Location</th>
@@ -361,27 +361,27 @@ export default function AssignmentsPage() {
                 <th className="py-3 px-4">Log Timestamp</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-200">
               {filteredAssignments.map((a) => (
-                <tr key={a.id} className="hover:bg-slate-800/40 text-slate-300">
-                  <td className="py-3 px-4 font-bold text-blue-400">{a.assignmentCode}</td>
+                <tr key={a.id} className="hover:bg-slate-50 text-slate-700">
+                  <td className="py-3 px-4 font-bold text-blue-600">{a.assignmentCode}</td>
                   <td className="py-3 px-4">
                     {a.type === 'ASSIGNMENT' ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-purple-950 text-purple-300 border border-purple-800 font-semibold">
+                      <span className="px-2 py-0.5 rounded text-[10px] bg-purple-100 text-purple-800 border border-purple-200 font-semibold">
                         ASSIGNMENT
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-semibold">
+                      <span className="px-2 py-0.5 rounded text-[10px] bg-amber-100 text-amber-800 border border-amber-200 font-semibold">
                         EXPENDITURE
                       </span>
                     )}
                   </td>
-                  <td className="py-3 px-4 text-slate-200">{a.baseName}</td>
-                  <td className="py-3 px-4 font-semibold text-slate-100">{a.equipmentTypeName}</td>
-                  <td className="py-3 px-4 text-slate-200 font-bold">{a.personnelName}</td>
-                  <td className="py-3 px-4 text-slate-400">{a.personnelRank}</td>
-                  <td className="py-3 px-4 text-right font-bold text-slate-100">{a.quantity}</td>
-                  <td className="py-3 px-4 text-slate-400">{new Date(a.timestamp).toLocaleString()}</td>
+                  <td className="py-3 px-4 text-slate-800">{a.baseName}</td>
+                  <td className="py-3 px-4 font-semibold text-slate-900">{a.equipmentTypeName}</td>
+                  <td className="py-3 px-4 text-slate-900 font-bold">{a.personnelName}</td>
+                  <td className="py-3 px-4 text-slate-500">{a.personnelRank}</td>
+                  <td className="py-3 px-4 text-right font-bold text-slate-900">{a.quantity}</td>
+                  <td className="py-3 px-4 text-slate-500">{new Date(a.timestamp).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

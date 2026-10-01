@@ -3,8 +3,8 @@ import { AuthContext } from '../context/AuthContext';
 import NetMovementModal from '../components/NetMovementModal';
 import API from '../api';
 import { 
-  Building2, Package, Calendar, ArrowRightLeft, TrendingUp, 
-  ShieldCheck, AlertTriangle, ExternalLink, RefreshCw, Layers
+  Building2, Package, Layers, 
+  ShieldCheck, AlertTriangle, ExternalLink, RefreshCw
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -68,7 +68,6 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Sync Base filter if user has scoped role
   useEffect(() => {
     if (user?.role !== 'ADMIN' && user?.baseId) {
       setSelectedBase(user.baseId);
@@ -114,198 +113,194 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="space-y-6 pb-12 font-sans text-slate-800">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/90 border border-slate-800 p-5 rounded-2xl shadow-lg">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-xl shadow-sm">
         <div>
-          <h2 className="text-xl font-extrabold text-slate-100 font-mono tracking-wide flex items-center gap-2">
-            COMMAND CENTER DASHBOARD
+          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+            Dashboard Overview
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Real-time asset movement metrics, unit allocations, and expenditure tracking.
+          <p className="text-xs text-slate-500 mt-0.5">
+            Real-time asset movement metrics, inventory levels, and expenditures.
           </p>
         </div>
         <button
           onClick={fetchDashboardData}
-          className="flex items-center space-x-2 text-xs px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono transition self-start md:self-auto"
+          className="flex items-center space-x-2 text-xs px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-medium transition cursor-pointer self-start md:self-auto"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-400' : ''}`} />
-          <span>Sync Live Feeds</span>
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-600' : ''}`} />
+          <span>Refresh Data</span>
         </button>
       </div>
 
-      {/* Global Filters Control Panel */}
-      <div className="bg-slate-900/80 border border-slate-800 p-4 rounded-xl space-y-3">
+      {/* Global Filters */}
+      <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-3 shadow-sm">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-mono text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <Building2 className="w-3.5 h-3.5 text-blue-400" /> Global Command Filters
+          <span className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+            <Building2 className="w-4 h-4 text-blue-600" /> Filters
           </span>
           {(selectedBase || selectedEquipment || startDate || endDate) && (
-            <button onClick={resetFilters} className="text-[11px] font-mono text-blue-400 hover:underline">
-              Clear All Filters
+            <button onClick={resetFilters} className="text-xs text-blue-600 hover:underline cursor-pointer">
+              Reset Filters
             </button>
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {/* Base Filter */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           <div>
-            <label className="block text-[11px] text-slate-400 mb-1 font-mono">Military Base Facility</label>
+            <label className="block text-slate-600 mb-1 font-medium">Military Base</label>
             <select
               value={selectedBase}
               onChange={(e) => setSelectedBase(e.target.value)}
               disabled={user?.role !== 'ADMIN'}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono disabled:opacity-75 disabled:cursor-not-allowed"
+              className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:border-blue-600 disabled:opacity-60"
             >
-              {user?.role === 'ADMIN' && <option value="">All Military Facilities (Global)</option>}
+              {user?.role === 'ADMIN' && <option value="">All Bases</option>}
               {bases.map((b) => (
                 <option key={b.id} value={b.id}>
-                  {b.name} ({b.code || `BASE-${b.id}`})
+                  {b.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Equipment Filter */}
           <div>
-            <label className="block text-[11px] text-slate-400 mb-1 font-mono">Equipment / Asset Type</label>
+            <label className="block text-slate-600 mb-1 font-medium">Equipment Type</label>
             <select
               value={selectedEquipment}
               onChange={(e) => setSelectedEquipment(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono"
+              className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:border-blue-600"
             >
-              <option value="">All Equipment Categories</option>
+              <option value="">All Equipment Types</option>
               {equipmentTypes.map((eq) => (
                 <option key={eq.id} value={eq.id}>
-                  {eq.name} [{eq.category}]
+                  {eq.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Start Date */}
           <div>
-            <label className="block text-[11px] text-slate-400 mb-1 font-mono">Start Date</label>
+            <label className="block text-slate-600 mb-1 font-medium">Start Date</label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono"
+              className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:border-blue-600"
             />
           </div>
 
-          {/* End Date */}
           <div>
-            <label className="block text-[11px] text-slate-400 mb-1 font-mono">End Date</label>
+            <label className="block text-slate-600 mb-1 font-medium">End Date</label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500 font-mono"
+              className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 focus:bg-white focus:outline-none focus:border-blue-600"
             />
           </div>
         </div>
       </div>
 
-      {/* 5 Core Metric Summary Cards */}
+      {/* 5 Core Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {/* 1. Opening Balance */}
-        <div className="glass-card p-4 rounded-xl space-y-2 relative overflow-hidden">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
-            <span>OPENING BALANCE</span>
-            <Layers className="w-4 h-4 text-slate-500" />
+        {/* Opening Balance */}
+        <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+            <span>Opening Balance</span>
+            <Layers className="w-4 h-4 text-slate-400" />
           </div>
-          <div className="text-2xl font-black text-slate-100 font-mono">{metrics.openingBalance.toLocaleString()}</div>
-          <div className="text-[10px] text-slate-400">Baseline Stock Record</div>
+          <div className="text-2xl font-bold text-slate-900">{metrics.openingBalance.toLocaleString()}</div>
+          <div className="text-[11px] text-slate-500">Initial Stock</div>
         </div>
 
-        {/* 2. Closing Balance */}
-        <div className="glass-card p-4 rounded-xl space-y-2 relative overflow-hidden">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
-            <span>CLOSING BALANCE</span>
-            <Package className="w-4 h-4 text-blue-400" />
+        {/* Closing Balance */}
+        <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+            <span>Closing Balance</span>
+            <Package className="w-4 h-4 text-blue-600" />
           </div>
-          <div className="text-2xl font-black text-blue-400 font-mono">{metrics.closingBalance.toLocaleString()}</div>
-          <div className="text-[10px] text-slate-400">Available Active Stock</div>
+          <div className="text-2xl font-bold text-blue-600">{metrics.closingBalance.toLocaleString()}</div>
+          <div className="text-[11px] text-slate-500">Available Stock</div>
         </div>
 
-        {/* 3. Net Movement (INTERACTIVE KEY FEATURE!) */}
+        {/* Net Movement (Interactive Modal Trigger) */}
         <div
           onClick={() => setIsModalOpen(true)}
-          className="glass-card p-4 rounded-xl space-y-2 border border-emerald-500/50 bg-emerald-950/20 hover:bg-emerald-950/40 cursor-pointer transition transform hover:-translate-y-0.5 shadow-lg shadow-emerald-950/30 group"
+          className="bg-emerald-50 border border-emerald-300 p-4 rounded-xl space-y-2 hover:bg-emerald-100/70 cursor-pointer transition shadow-sm group"
         >
-          <div className="flex items-center justify-between text-emerald-300 text-xs font-mono font-bold">
-            <span>NET MOVEMENT</span>
-            <ExternalLink className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition" />
+          <div className="flex items-center justify-between text-emerald-800 text-xs font-semibold">
+            <span>Net Movement</span>
+            <ExternalLink className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition" />
           </div>
-          <div className="text-2xl font-black text-emerald-400 font-mono flex items-center gap-1">
+          <div className="text-2xl font-bold text-emerald-700">
             {metrics.netMovement >= 0 ? `+${metrics.netMovement.toLocaleString()}` : metrics.netMovement.toLocaleString()}
           </div>
-          <div className="text-[11px] font-mono text-emerald-300/90 underline group-hover:text-emerald-200">
-            Click for Breakdown Logs &rarr;
+          <div className="text-[11px] font-medium text-emerald-700 underline">
+            View Breakdown &rarr;
           </div>
         </div>
 
-        {/* 4. Assigned Assets */}
-        <div className="glass-card p-4 rounded-xl space-y-2 relative overflow-hidden">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
-            <span>ASSIGNED ASSETS</span>
-            <ShieldCheck className="w-4 h-4 text-purple-400" />
+        {/* Assigned Assets */}
+        <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+            <span>Assigned Assets</span>
+            <ShieldCheck className="w-4 h-4 text-purple-600" />
           </div>
-          <div className="text-2xl font-black text-purple-300 font-mono">{metrics.assignedAssets.toLocaleString()}</div>
-          <div className="text-[10px] text-slate-400">Deployed to Personnel</div>
+          <div className="text-2xl font-bold text-purple-700">{metrics.assignedAssets.toLocaleString()}</div>
+          <div className="text-[11px] text-slate-500">In Active Use</div>
         </div>
 
-        {/* 5. Expended Assets */}
-        <div className="glass-card p-4 rounded-xl space-y-2 relative overflow-hidden">
-          <div className="flex items-center justify-between text-slate-400 text-xs font-mono">
-            <span>EXPENDED ASSETS</span>
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
+        {/* Expended Assets */}
+        <div className="bg-white border border-slate-200 p-4 rounded-xl space-y-2 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+            <span>Expended Assets</span>
+            <AlertTriangle className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-2xl font-black text-amber-400 font-mono">{metrics.expendedAssets.toLocaleString()}</div>
-          <div className="text-[10px] text-slate-400">Consumed in Operations</div>
+          <div className="text-2xl font-bold text-amber-600">{metrics.expendedAssets.toLocaleString()}</div>
+          <div className="text-[11px] text-slate-500">Consumed / Used</div>
         </div>
       </div>
 
-      {/* Interactive Equipment Stock Status Table */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl">
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-          <h3 className="text-sm font-bold text-slate-200 font-mono uppercase tracking-wider flex items-center gap-2">
-            <Package className="w-4 h-4 text-blue-400" /> Inventory Stock Levels by Equipment Category
+      {/* Equipment Inventory Stock Table */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 space-y-4 shadow-sm">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+            <Package className="w-4 h-4 text-blue-600" /> Inventory Stock Levels
           </h3>
-          <span className="text-xs text-slate-400 font-mono">Showing {equipmentTypes.length} Regulated Items</span>
+          <span className="text-xs text-slate-500 font-medium">Showing {equipmentTypes.length} Items</span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-mono border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/60">
-                <th className="py-3 px-4">Equipment Description</th>
-                <th className="py-3 px-4">Category</th>
-                <th className="py-3 px-4">Unit of Measure</th>
-                <th className="py-3 px-4 text-right">Est. Opening</th>
-                <th className="py-3 px-4 text-right">Closing Balance</th>
-                <th className="py-3 px-4 text-center">Status</th>
+              <tr className="border-b border-slate-200 text-slate-600 bg-slate-50">
+                <th className="py-3 px-4 font-semibold">Equipment Item</th>
+                <th className="py-3 px-4 font-semibold">Category</th>
+                <th className="py-3 px-4 font-semibold">Unit</th>
+                <th className="py-3 px-4 text-right font-semibold">Opening</th>
+                <th className="py-3 px-4 text-right font-semibold">Closing Balance</th>
+                <th className="py-3 px-4 text-center font-semibold">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100 text-slate-800">
               {equipmentTypes.map((item) => {
                 const closing = Math.floor(Math.random() * 400) + 50;
                 const opening = closing + Math.floor(Math.random() * 50) - 25;
                 return (
-                  <tr key={item.id} className="hover:bg-slate-800/40 text-slate-300">
-                    <td className="py-3 px-4 font-bold text-slate-100">{item.name}</td>
+                  <tr key={item.id} className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-semibold text-slate-900">{item.name}</td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">
+                      <span className="px-2 py-0.5 rounded text-[11px] bg-slate-100 text-slate-700 border border-slate-200 font-medium">
                         {item.category}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-400">{item.unitOfMeasure}</td>
-                    <td className="py-3 px-4 text-right text-slate-400">{opening}</td>
-                    <td className="py-3 px-4 text-right font-bold text-blue-400">{closing}</td>
+                    <td className="py-3 px-4 text-slate-500">{item.unitOfMeasure}</td>
+                    <td className="py-3 px-4 text-right text-slate-500">{opening}</td>
+                    <td className="py-3 px-4 text-right font-bold text-blue-600">{closing}</td>
                     <td className="py-3 px-4 text-center">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 font-semibold">
-                        OPTIMAL STOCK
+                      <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-300 font-semibold">
+                        In Stock
                       </span>
                     </td>
                   </tr>

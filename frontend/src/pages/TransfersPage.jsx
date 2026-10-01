@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import API from '../api';
-import { ArrowLeftRight, Plus, CheckCircle2, XCircle, Clock, ShieldCheck, Building2 } from 'lucide-react';
+import { ArrowLeftRight, Plus, CheckCircle2, XCircle, Clock, ShieldCheck } from 'lucide-react';
 
 export default function TransfersPage() {
   const { user } = useContext(AuthContext);
@@ -75,10 +75,10 @@ export default function TransfersPage() {
         transferCode: `TRF-2026-${Math.floor(100 + Math.random() * 900)}`,
         sourceBaseName: src?.name || 'Fort Alpha',
         destinationBaseName: dst?.name || 'Base Bravo',
-        equipmentTypeName: eq?.name || 'Military Equipment',
+        equipmentTypeName: eq?.name || 'Equipment Item',
         quantity: parseInt(formData.quantity),
         status: user?.role === 'LOGISTICS_OFFICER' ? 'PENDING' : 'COMPLETED',
-        notes: formData.notes || 'Tactical redistribution',
+        notes: formData.notes || 'Inter-base redistribution',
         requestedByUsername: user?.username || 'officer',
         approvedByUsername: user?.role === 'LOGISTICS_OFFICER' ? null : user?.username,
         createdAt: new Date().toISOString()
@@ -86,7 +86,7 @@ export default function TransfersPage() {
       setTransfers([newTrf, ...transfers]);
     }
 
-    setNotice('Transfer initiated successfully! Asset movement logged.');
+    setNotice('Transfer initiated successfully!');
     setShowForm(false);
     setTimeout(() => setNotice(''), 4000);
   };
@@ -111,7 +111,6 @@ export default function TransfersPage() {
         );
       }
     } catch (e) {
-      console.warn('API update failed, applying local fallback:', e);
       setTransfers(prev =>
         prev.map(t => {
           if (t.id === id) {
@@ -126,7 +125,7 @@ export default function TransfersPage() {
       );
     }
 
-    setNotice(`Transfer status updated to ${status}. Asset stock adjusted.`);
+    setNotice(`Transfer status updated to ${status}.`);
     setTimeout(() => setNotice(''), 4000);
   };
 
@@ -135,20 +134,20 @@ export default function TransfersPage() {
       case 'COMPLETED':
       case 'APPROVED':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono font-semibold flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-emerald-400" /> COMPLETED
+          <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-300 font-semibold flex items-center gap-1 justify-center">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Completed
           </span>
         );
       case 'PENDING':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-semibold flex items-center gap-1">
-            <Clock className="w-3 h-3 text-amber-400" /> Pending Approval
+          <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-50 text-amber-700 border border-amber-300 font-semibold flex items-center gap-1 justify-center">
+            <Clock className="w-3 h-3 text-amber-500" /> Pending Approval
           </span>
         );
       case 'REJECTED':
         return (
-          <span className="px-2 py-0.5 rounded-full text-[10px] bg-red-950 text-red-300 border border-red-800 font-semibold flex items-center gap-1">
-            <XCircle className="w-3 h-3 text-red-400" /> REJECTED
+          <span className="px-2 py-0.5 rounded-full text-[10px] bg-red-50 text-red-700 border border-red-300 font-semibold flex items-center gap-1 justify-center">
+            <XCircle className="w-3 h-3 text-red-500" /> Rejected
           </span>
         );
       default:
@@ -157,89 +156,90 @@ export default function TransfersPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+    <div className="space-y-6 pb-12 font-sans text-slate-800">
+      {/* Title */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-xl shadow-sm">
         <div>
-          <h2 className="text-xl font-bold text-slate-100 flex items-center gap-2 tracking-tight">
-            <ArrowLeftRight className="w-5 h-5 text-blue-400" /> Inter-Base Asset Transfers
+          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <ArrowLeftRight className="w-5 h-5 text-blue-600" /> Inter-Base Asset Transfers
           </h2>
-          <p className="text-xs text-slate-400 mt-1">Initiate and authorize equipment transfers between military facilities.</p>
+          <p className="text-xs text-slate-500 mt-0.5">Initiate and authorize equipment transfers between bases.</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow transition cursor-pointer"
+          className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-medium transition cursor-pointer shadow-sm"
         >
           <Plus className="w-4 h-4" />
-          <span>{showForm ? 'Cancel Entry' : 'Initiate Asset Transfer'}</span>
+          <span>{showForm ? 'Cancel' : 'New Transfer'}</span>
         </button>
       </div>
 
       {notice && (
-        <div className="p-4 bg-blue-950/80 border border-blue-700 text-blue-300 rounded-xl text-xs font-mono flex items-center gap-2 shadow">
-          <ShieldCheck className="w-4 h-4" /> {notice}
+        <div className="p-3 bg-blue-50 border border-blue-300 text-blue-800 rounded-lg text-xs flex items-center gap-2 shadow-sm">
+          <ShieldCheck className="w-4 h-4 text-blue-600" /> {notice}
         </div>
       )}
 
       {showForm && (
-        <form onSubmit={handleInitiate} className="bg-slate-900 border border-blue-800/80 p-5 rounded-2xl space-y-4 shadow-2xl animate-fadeIn">
-          <h3 className="text-sm font-bold font-mono text-blue-400 uppercase tracking-wider">Initiate Inter-Base Transfer</h3>
+        <form onSubmit={handleInitiate} className="bg-white border border-slate-200 p-5 rounded-xl space-y-4 shadow-sm text-xs">
+          <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2">Initiate Asset Transfer</h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Source Base (From)</label>
+              <label className="block text-slate-600 mb-1 font-medium">Source Base (From)</label>
               <select
                 value={formData.sourceBaseId}
                 onChange={(e) => setFormData({ ...formData, sourceBaseId: e.target.value })}
                 disabled={user?.role !== 'ADMIN'}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
               >
                 {bases.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Destination Base (To)</label>
+              <label className="block text-slate-600 mb-1 font-medium">Destination Base (To)</label>
               <select
                 value={formData.destinationBaseId}
                 onChange={(e) => setFormData({ ...formData, destinationBaseId: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
               >
                 {bases.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Equipment Item</label>
+              <label className="block text-slate-600 mb-1 font-medium">Equipment Item</label>
               <select
                 value={formData.equipmentTypeId}
                 onChange={(e) => setFormData({ ...formData, equipmentTypeId: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
               >
                 {equipmentTypes.map(eq => <option key={eq.id} value={eq.id}>{eq.name}</option>)}
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Quantity to Transfer</label>
+              <label className="block text-slate-600 mb-1 font-medium">Quantity</label>
               <input
                 type="number"
                 min="1"
                 value={formData.quantity}
                 onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200"
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
                 required
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-slate-400 mb-1">Transfer Purpose & Tactical Notes</label>
+            <label className="block text-slate-600 mb-1 font-medium">Notes & Reason</label>
             <input
               type="text"
-              placeholder="Reason for transfer requisition..."
+              placeholder="Reason for transfer..."
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs font-mono text-slate-200"
+              className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-900"
             />
           </div>
 
@@ -247,64 +247,64 @@ export default function TransfersPage() {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-mono"
+              className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono font-bold shadow"
+              className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm cursor-pointer"
             >
-              Submit Request
+              Submit Transfer Request
             </button>
           </div>
         </form>
       )}
 
-      {/* Transfer History Table */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      {/* Table */}
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-mono border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/60">
-                <th className="py-3 px-4">Transfer ID</th>
-                <th className="py-3 px-4">Source Facility (Out)</th>
-                <th className="py-3 px-4">Destination Base (In)</th>
-                <th className="py-3 px-4">Asset Detail</th>
+              <tr className="border-b border-slate-200 text-slate-600 bg-slate-50 font-semibold">
+                <th className="py-3 px-4">Transfer Code</th>
+                <th className="py-3 px-4">Source Base</th>
+                <th className="py-3 px-4">Destination Base</th>
+                <th className="py-3 px-4">Equipment Item</th>
                 <th className="py-3 px-4 text-right">Qty</th>
                 <th className="py-3 px-4">Notes</th>
                 <th className="py-3 px-4 text-center">Status</th>
-                <th className="py-3 px-4 text-center">Command Action</th>
+                <th className="py-3 px-4 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-100 text-slate-800">
               {transfers.map((t) => (
-                <tr key={t.id} className="hover:bg-slate-800/40 text-slate-300">
-                  <td className="py-3 px-4 font-bold text-blue-400">{t.transferCode}</td>
-                  <td className="py-3 px-4 text-amber-300">{t.sourceBaseName}</td>
-                  <td className="py-3 px-4 text-blue-300">{t.destinationBaseName}</td>
-                  <td className="py-3 px-4 font-semibold text-slate-100">{t.equipmentTypeName}</td>
-                  <td className="py-3 px-4 text-right font-bold text-slate-200">{t.quantity}</td>
-                  <td className="py-3 px-4 text-slate-400">{t.notes}</td>
+                <tr key={t.id} className="hover:bg-slate-50">
+                  <td className="py-3 px-4 font-bold text-blue-600 font-mono">{t.transferCode}</td>
+                  <td className="py-3 px-4 text-slate-800">{t.sourceBaseName}</td>
+                  <td className="py-3 px-4 text-slate-800">{t.destinationBaseName}</td>
+                  <td className="py-3 px-4 font-semibold text-slate-900">{t.equipmentTypeName}</td>
+                  <td className="py-3 px-4 text-right font-bold text-slate-900">{t.quantity}</td>
+                  <td className="py-3 px-4 text-slate-500">{t.notes}</td>
                   <td className="py-3 px-4 text-center">{getStatusBadge(t.status)}</td>
                   <td className="py-3 px-4 text-center">
                     {t.status === 'PENDING' ? (
-                      <div className="flex items-center justify-center space-x-1">
+                      <div className="flex items-center justify-center space-x-1.5">
                         <button
                           onClick={() => handleUpdateStatus(t.id, 'APPROVED')}
-                          className="px-2.5 py-1 rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border border-emerald-700 text-[10px] font-bold cursor-pointer transition active:scale-95 shadow"
+                          className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-medium cursor-pointer transition shadow-sm"
                         >
                           Approve
                         </button>
                         <button
                           onClick={() => handleUpdateStatus(t.id, 'REJECTED')}
-                          className="px-2.5 py-1 rounded bg-red-950 hover:bg-red-900 text-red-400 border border-red-700 text-[10px] font-bold cursor-pointer transition active:scale-95 shadow"
+                          className="px-2.5 py-1 rounded bg-red-600 hover:bg-red-700 text-white text-[11px] font-medium cursor-pointer transition shadow-sm"
                         >
                           Reject
                         </button>
                       </div>
                     ) : (
-                      <span className="text-[10px] text-slate-500">Authorized</span>
+                      <span className="text-[11px] text-slate-400">Authorized</span>
                     )}
                   </td>
                 </tr>

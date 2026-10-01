@@ -14,7 +14,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
   ];
 
   return (
-    <aside className="w-56 bg-slate-900 border-r border-slate-800 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)]">
+    <aside className="w-56 bg-white border-r border-slate-200 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] shadow-sm">
       <div className="space-y-4">
         <p className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold px-2">Navigation</p>
 
@@ -31,8 +31,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
                 onClick={() => setActiveTab(item.id)}
                 className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer ${
                   isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                    ? 'bg-blue-600 text-white shadow-sm font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -44,8 +44,8 @@ export default function Sidebar({ activeTab, setActiveTab }) {
       </div>
 
       {/* Footer */}
-      <div className="text-[11px] text-slate-400 bg-slate-800/50 p-3 rounded-lg border border-slate-800">
-        Role: <span className="font-semibold text-slate-200">{user?.role?.replace('_', ' ')}</span>
+      <div className="text-[11px] text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200 font-sans">
+        Role: <span className="font-semibold text-slate-800">{user?.role?.replace('_', ' ')}</span>
       </div>
     </aside>
   );

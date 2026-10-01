@@ -29,7 +29,7 @@ export default function NetMovementModal({ isOpen, onClose, breakdownData }) {
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-slate-800 text-slate-400 font-mono bg-slate-900/60">
+            <tr className="border-b border-slate-200 text-slate-600 font-medium bg-slate-50">
               <th className="py-2.5 px-3">Ref Code</th>
               <th className="py-2.5 px-3">Equipment Item</th>
               <th className="py-2.5 px-3 text-right">Qty</th>
@@ -39,18 +39,18 @@ export default function NetMovementModal({ isOpen, onClose, breakdownData }) {
               <th className="py-2.5 px-3 text-center">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 font-mono">
+          <tbody className="divide-y divide-slate-200">
             {logs.map((log, idx) => (
-              <tr key={idx} className="hover:bg-slate-800/40 text-slate-300">
-                <td className="py-2.5 px-3 font-bold text-blue-400">{log.code || log.id}</td>
-                <td className="py-2.5 px-3 font-semibold text-slate-200">{log.equipmentName}</td>
-                <td className="py-2.5 px-3 text-right font-bold text-emerald-400">+{log.quantity}</td>
-                <td className="py-2.5 px-3 text-slate-400">{log.sourceOrSupplier || 'N/A'}</td>
-                <td className="py-2.5 px-3 text-slate-400">{log.destinationOrBase || 'N/A'}</td>
-                <td className="py-2.5 px-3 text-slate-400">{new Date(log.timestamp).toLocaleString()}</td>
+              <tr key={idx} className="hover:bg-slate-50 text-slate-700">
+                <td className="py-2.5 px-3 font-bold text-blue-600">{log.code || log.id}</td>
+                <td className="py-2.5 px-3 font-semibold text-slate-900">{log.equipmentName}</td>
+                <td className="py-2.5 px-3 text-right font-bold text-emerald-600">+{log.quantity}</td>
+                <td className="py-2.5 px-3 text-slate-500">{log.sourceOrSupplier || 'N/A'}</td>
+                <td className="py-2.5 px-3 text-slate-500">{log.destinationOrBase || 'N/A'}</td>
+                <td className="py-2.5 px-3 text-slate-500">{new Date(log.timestamp).toLocaleString()}</td>
                 <td className="py-2.5 px-3 text-center">
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] bg-emerald-950/80 text-emerald-300 border border-emerald-800">
-                    <CheckCircle2 className="w-3 h-3" /> {log.status || 'COMPLETED'}
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-600" /> {log.status || 'COMPLETED'}
                   </span>
                 </td>
               </tr>
@@ -62,57 +62,57 @@ export default function NetMovementModal({ isOpen, onClose, breakdownData }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
+      <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-4xl shadow-xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Modal Header */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950/80 flex items-center justify-between">
+        <div className="p-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2.5 rounded-lg bg-blue-950 text-blue-400 border border-blue-800/60">
+            <div className="p-2.5 rounded-lg bg-blue-100 text-blue-600 border border-blue-200">
               <Calculator className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-100 font-mono tracking-wide">NET MOVEMENT BREAKDOWN AUDIT</h2>
-              <p className="text-xs text-slate-400">Formula: Net Movement = Purchases + Transfers In - Transfers Out</p>
+              <h2 className="text-base font-bold text-slate-900 tracking-tight">Net Movement Breakdown Audit</h2>
+              <p className="text-xs text-slate-500">Formula: Net Movement = Purchases + Transfers In - Transfers Out</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition"
+            className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Math Calculation Banner */}
-        <div className="grid grid-cols-4 gap-3 p-4 bg-slate-950/40 border-b border-slate-800/80 text-xs font-mono">
-          <div className="bg-emerald-950/40 border border-emerald-800/60 p-3 rounded-xl">
-            <div className="text-slate-400 text-[10px]">PURCHASES (+)</div>
-            <div className="text-lg font-bold text-emerald-400">+{totalPurchases}</div>
+        <div className="grid grid-cols-4 gap-3 p-4 bg-slate-50/70 border-b border-slate-200 text-xs">
+          <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-xl">
+            <div className="text-emerald-700 text-[10px] font-semibold">PURCHASES (+)</div>
+            <div className="text-lg font-bold text-emerald-700">+{totalPurchases}</div>
           </div>
-          <div className="bg-blue-950/40 border border-blue-800/60 p-3 rounded-xl">
-            <div className="text-slate-400 text-[10px]">TRANSFERS IN (+)</div>
-            <div className="text-lg font-bold text-blue-400">+{totalTransfersIn}</div>
+          <div className="bg-blue-50 border border-blue-200 p-3 rounded-xl">
+            <div className="text-blue-700 text-[10px] font-semibold">TRANSFERS IN (+)</div>
+            <div className="text-lg font-bold text-blue-700">+{totalTransfersIn}</div>
           </div>
-          <div className="bg-amber-950/40 border border-amber-800/60 p-3 rounded-xl">
-            <div className="text-slate-400 text-[10px]">TRANSFERS OUT (-)</div>
-            <div className="text-lg font-bold text-amber-400">-{totalTransfersOut}</div>
+          <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl">
+            <div className="text-amber-700 text-[10px] font-semibold">TRANSFERS OUT (-)</div>
+            <div className="text-lg font-bold text-amber-700">-{totalTransfersOut}</div>
           </div>
-          <div className="bg-indigo-950/60 border border-indigo-700 p-3 rounded-xl shadow-lg">
-            <div className="text-indigo-300 text-[10px]">NET MOVEMENT SUMMARY</div>
-            <div className="text-lg font-extrabold text-indigo-200">
+          <div className="bg-indigo-50 border border-indigo-200 p-3 rounded-xl shadow-sm">
+            <div className="text-indigo-700 text-[10px] font-semibold">NET MOVEMENT SUMMARY</div>
+            <div className="text-lg font-extrabold text-indigo-700">
               {totalNetMovement >= 0 ? `+${totalNetMovement}` : totalNetMovement}
             </div>
           </div>
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b border-slate-800 px-5 bg-slate-900/50">
+        <div className="flex border-b border-slate-200 px-5 bg-slate-50">
           <button
             onClick={() => setActiveTab('purchases')}
-            className={`py-3 px-4 text-xs font-mono font-semibold flex items-center space-x-2 border-b-2 transition ${
+            className={`py-3 px-4 text-xs font-semibold flex items-center space-x-2 border-b-2 transition ${
               activeTab === 'purchases'
-                ? 'border-emerald-500 text-emerald-400 bg-emerald-950/20'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-emerald-600 text-emerald-700 bg-emerald-50'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
             <ShoppingBag className="w-4 h-4" />
@@ -120,10 +120,10 @@ export default function NetMovementModal({ isOpen, onClose, breakdownData }) {
           </button>
           <button
             onClick={() => setActiveTab('transfersIn')}
-            className={`py-3 px-4 text-xs font-mono font-semibold flex items-center space-x-2 border-b-2 transition ${
+            className={`py-3 px-4 text-xs font-semibold flex items-center space-x-2 border-b-2 transition ${
               activeTab === 'transfersIn'
-                ? 'border-blue-500 text-blue-400 bg-blue-950/20'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-blue-600 text-blue-700 bg-blue-50'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
             <ArrowDownLeft className="w-4 h-4" />
@@ -131,10 +131,10 @@ export default function NetMovementModal({ isOpen, onClose, breakdownData }) {
           </button>
           <button
             onClick={() => setActiveTab('transfersOut')}
-            className={`py-3 px-4 text-xs font-mono font-semibold flex items-center space-x-2 border-b-2 transition ${
+            className={`py-3 px-4 text-xs font-semibold flex items-center space-x-2 border-b-2 transition ${
               activeTab === 'transfersOut'
-                ? 'border-amber-500 text-amber-400 bg-amber-950/20'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-amber-600 text-amber-700 bg-amber-50'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
             }`}
           >
             <ArrowUpRight className="w-4 h-4" />
@@ -150,10 +150,10 @@ export default function NetMovementModal({ isOpen, onClose, breakdownData }) {
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/90 flex justify-end">
+        <div className="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono font-semibold transition"
+            className="px-5 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold transition"
           >
             Close Window
           </button>

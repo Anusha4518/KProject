@@ -33,15 +33,15 @@ export default function AuditLogsPage() {
 
   const getActionBadge = (actionType) => {
     if (actionType.includes('PURCHASE')) {
-      return <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 font-semibold">{actionType}</span>;
+      return <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold">{actionType}</span>;
     }
     if (actionType.includes('TRANSFER')) {
-      return <span className="px-2 py-0.5 rounded text-[10px] bg-blue-950 text-blue-300 border border-blue-800 font-semibold">{actionType}</span>;
+      return <span className="px-2 py-0.5 rounded text-[10px] bg-blue-100 text-blue-800 border border-blue-300 font-semibold">{actionType}</span>;
     }
     if (actionType.includes('EXPENDED')) {
-      return <span className="px-2 py-0.5 rounded text-[10px] bg-amber-950 text-amber-300 border border-amber-800 font-semibold">{actionType}</span>;
+      return <span className="px-2 py-0.5 rounded text-[10px] bg-amber-100 text-amber-800 border border-amber-300 font-semibold">{actionType}</span>;
     }
-    return <span className="px-2 py-0.5 rounded text-[10px] bg-purple-950 text-purple-300 border border-purple-800 font-semibold">{actionType}</span>;
+    return <span className="px-2 py-0.5 rounded text-[10px] bg-purple-100 text-purple-800 border border-purple-300 font-semibold">{actionType}</span>;
   };
 
   const filteredLogs = logs.filter(l => {
@@ -52,36 +52,36 @@ export default function AuditLogsPage() {
 
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/90 border border-slate-800 p-5 rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-5 rounded-2xl shadow-sm">
         <div>
-          <h2 className="text-xl font-extrabold text-slate-100 font-mono tracking-wide flex items-center gap-2">
-            <History className="w-5 h-5 text-indigo-400" /> SYSTEM AUDIT LOG LEDGER (`audit_logs`)
+          <h2 className="text-xl font-extrabold text-slate-900 font-sans tracking-tight flex items-center gap-2">
+            <History className="w-5 h-5 text-indigo-600" /> System Audit Log Ledger
           </h2>
-          <p className="text-xs text-slate-400 mt-1">Immutable security log storing user transactions, purchases, transfers, and security events.</p>
+          <p className="text-xs text-slate-500 mt-1">Security log storing user transactions, purchases, transfers, and system events.</p>
         </div>
         <button
           onClick={fetchAuditLogs}
-          className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-xl text-xs font-mono border border-slate-700 transition"
+          className="flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-medium border border-slate-300 transition"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-600' : ''}`} />
           <span>Refresh Feed</span>
         </button>
       </div>
 
       {/* Filter controls */}
-      <div className="bg-slate-900/80 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono">
+      <div className="bg-white border border-slate-200 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs shadow-sm">
         <div className="flex items-center space-x-3">
           <input
             type="text"
             placeholder="Filter by Username..."
             value={filterUser}
             onChange={(e) => setFilterUser(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-200 focus:outline-none"
+            className="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-slate-900 focus:outline-none focus:border-blue-600"
           />
           <select
             value={filterAction}
             onChange={(e) => setFilterAction(e.target.value)}
-            className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-200"
+            className="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-slate-900 focus:outline-none focus:border-blue-600"
           >
             <option value="">All Action Types</option>
             <option value="PURCHASE_RECORDED">PURCHASE_RECORDED</option>
@@ -92,17 +92,17 @@ export default function AuditLogsPage() {
             <option value="LOGIN_SUCCESS">LOGIN_SUCCESS</option>
           </select>
         </div>
-        <div className="text-slate-400">
-          Total Recorded Events: <span className="text-slate-100 font-bold">{filteredLogs.length}</span>
+        <div className="text-slate-500 font-medium">
+          Total Recorded Events: <span className="text-slate-900 font-bold">{filteredLogs.length}</span>
         </div>
       </div>
 
       {/* Audit Table */}
-      <div className="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-mono border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-400 bg-slate-950/60">
+              <tr className="border-b border-slate-200 text-slate-600 bg-slate-50 font-semibold">
                 <th className="py-3 px-4">Log ID</th>
                 <th className="py-3 px-4">Timestamp</th>
                 <th className="py-3 px-4">User</th>
@@ -113,21 +113,21 @@ export default function AuditLogsPage() {
                 <th className="py-3 px-4 text-right">IP Address</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-200">
               {filteredLogs.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-800/40 text-slate-300">
-                  <td className="py-3 px-4 font-bold text-slate-400">#{log.id}</td>
-                  <td className="py-3 px-4 text-slate-400">{new Date(log.timestamp).toLocaleString()}</td>
-                  <td className="py-3 px-4 font-bold text-slate-200 flex items-center gap-1">
-                    <User className="w-3 h-3 text-indigo-400" /> {log.username}
+                <tr key={log.id} className="hover:bg-slate-50 text-slate-700">
+                  <td className="py-3 px-4 font-bold text-slate-500">#{log.id}</td>
+                  <td className="py-3 px-4 text-slate-500">{new Date(log.timestamp).toLocaleString()}</td>
+                  <td className="py-3 px-4 font-bold text-slate-900 flex items-center gap-1">
+                    <User className="w-3 h-3 text-indigo-600" /> {log.username}
                   </td>
-                  <td className="py-3 px-4 text-slate-400">{log.userRole}</td>
+                  <td className="py-3 px-4 text-slate-500">{log.userRole}</td>
                   <td className="py-3 px-4">{getActionBadge(log.actionType)}</td>
-                  <td className="py-3 px-4 text-slate-300 font-semibold">{log.entityType} #{log.entityId || '-'}</td>
-                  <td className="py-3 px-4 text-slate-300 font-sans max-w-md truncate" title={log.details}>
+                  <td className="py-3 px-4 text-slate-800 font-semibold">{log.entityType} #{log.entityId || '-'}</td>
+                  <td className="py-3 px-4 text-slate-700 max-w-md truncate" title={log.details}>
                     {log.details}
                   </td>
-                  <td className="py-3 px-4 text-right text-slate-500">{log.ipAddress || '127.0.0.1'}</td>
+                  <td className="py-3 px-4 text-right text-slate-400">{log.ipAddress || '127.0.0.1'}</td>
                 </tr>
               ))}
             </tbody>
