@@ -21,6 +21,7 @@ export default function LoginPage() {
   });
 
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -34,15 +35,24 @@ export default function LoginPage() {
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
+
     if (!regForm.username || !regForm.password || !regForm.fullName) {
       setError('Please fill in all required fields');
       return;
     }
+
     const result = await register({
       ...regForm,
       baseId: parseInt(regForm.baseId)
     });
-    if (!result.success) {
+
+    if (result.success) {
+      setLoginUsername(regForm.username);
+      setLoginPassword(regForm.password);
+      setSuccessMessage(`Account for "${regForm.username}" registered successfully! Please sign in with your password.`);
+      setIsRegister(false);
+    } else {
       setError(result.message || 'Registration failed');
     }
   };
@@ -57,7 +67,7 @@ export default function LoginPage() {
             <Shield className="w-6 h-6" />
           </div>
           <h1 className="text-xl font-bold">Military Asset Management</h1>
-          <p className="text-xs text-slate-400">Sign in to manage inventory and asset transfers</p>
+          <p className="text-xs text-slate-400 font-sans">Sign in to manage inventory and asset transfers</p>
         </div>
 
         {/* Tab Switcher */}
@@ -71,12 +81,20 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
-            onClick={() => { setIsRegister(true); setError(''); }}
+            onClick={() => { setIsRegister(true); setError(''); setSuccessMessage(''); }}
             className={`flex-1 py-2 rounded-md transition ${isRegister ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
           >
             Register
           </button>
         </div>
+
+        {/* Success Notification */}
+        {successMessage && (
+          <div className="p-3 rounded-lg bg-emerald-950/90 border border-emerald-700 text-emerald-300 text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <span>{successMessage}</span>
+          </div>
+        )}
 
         {/* Error Notification */}
         {error && (

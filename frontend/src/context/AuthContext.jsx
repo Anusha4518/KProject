@@ -71,27 +71,10 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (registerData) => {
     try {
-      const res = await API.post('/auth/register', registerData);
-      const { token, ...userData } = res.data;
-      localStorage.setItem('military_jwt_token', token);
-      localStorage.setItem('military_user_info', JSON.stringify(userData));
-      setUser(userData);
+      await API.post('/auth/register', registerData);
       return { success: true };
     } catch (err) {
-      // Local fallback for demo mode
-      const mockToken = `mock-jwt-token-registered-${Date.now()}`;
-      const userData = {
-        userId: Date.now(),
-        username: registerData.username,
-        fullName: registerData.fullName || registerData.username,
-        role: registerData.role || 'LOGISTICS_OFFICER',
-        baseId: registerData.baseId || 1,
-        baseName: 'Fort Alpha Central Command',
-        rankTitle: registerData.rankTitle || 'Lieutenant'
-      };
-      localStorage.setItem('military_jwt_token', mockToken);
-      localStorage.setItem('military_user_info', JSON.stringify(userData));
-      setUser(userData);
+      // Local fallback for demo mode - do not log user in
       return { success: true };
     }
   };
